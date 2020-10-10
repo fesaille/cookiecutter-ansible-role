@@ -1,0 +1,9 @@
+{
+    "role_name": "role_name",
+    "author": "your name",
+    "company": "none",
+    "description": "role description",
+    "add_travis_config": "n",
+    "add_Gitlab_CI_config": "n",
+    "license": ["BSD-3-Clause", "MIT", "GPLv2", "GPLv3", "Apache-2.0", "CC-BY-4.0"]
+}
