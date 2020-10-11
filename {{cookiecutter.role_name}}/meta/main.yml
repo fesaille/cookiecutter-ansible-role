@@ -1,3 +1,4 @@
+---
 galaxy_info:
   author: "{{ cookiecutter.author }}"
   description: "{{ cookiecutter.description }}"
@@ -12,12 +13,8 @@ galaxy_info:
   # https://docs.ansible.com/ansible/devel/reference_appendices/release_and_maintenance.html
   min_ansible_version: 2.9
 
-  # If this a Container Enabled role, provide the minimum Ansible Container version.
   # min_ansible_container_version:
 
-  #
-  # Provide a list of supported platforms, and for each platform a list of versions.
-  # If you don't wish to enumerate all versions for a particular platform, use 'all'.
   # To view available platforms and versions (or releases), visit:
   # https://galaxy.ansible.com/api/v1/platforms/
   #
@@ -33,8 +30,8 @@ galaxy_info:
   #   - 7
   #   - 99.99
 
-    # A tag is limited to a single word comprised of alphanumeric characters.
-    # Maximum 20 tags per role.
+  # A tag is limited to a single word comprised of alphanumeric characters.
+  # Maximum 20 tags per role.
   galaxy_tags: []
 
 dependencies: []
