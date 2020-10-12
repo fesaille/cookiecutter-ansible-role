@@ -1,4 +1,6 @@
 from contextlib import contextmanager
+from pathlib import Path
+from typing import Dict
 
 import docker
 import pytest
@@ -42,6 +44,13 @@ def installation_dir(tmpdir_factory):
     return tmp
 
 
+@pytest.fixture(scope="session")
+def config():
+    import json
+
+    return json.load(Path("cookiecutter.json").open())
+
+
 def test_python_installation(container: docker.models.containers.Container) -> None:
     """Is python available in the container?"""
 
@@ -74,8 +83,6 @@ def test_is_role_installed(
 ) -> None:
     """Is role installed?"""
 
-    print(installation_dir)
-    print(installation_dir.exists())
     res: docker.ExecResult = container.exec_run(
         f"cookiecutter --no-input gh:fesaille/cookiecutter-ansible-role -o {installation_dir}"
     )
@@ -83,9 +90,12 @@ def test_is_role_installed(
 
 
 def test_is_git_dir(
-    container: docker.models.containers.Container, installation_dir
+    container: docker.models.containers.Container, installation_dir: Path, config: Dict
 ) -> None:
     """Is role inits a git dir?"""
 
-    res: docker.ExecResult = container.exec_run(f"git -C {installation_dir} rev-parse")
+    role_name = config["role_name"]
+    role_dir = installation_dir / role_name
+
+    res: docker.ExecResult = container.exec_run(f"git -C {role_dir} rev-parse")
     assert res.exit_code == 0, f"Role did not create a git dir"
