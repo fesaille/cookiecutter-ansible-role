@@ -33,7 +33,7 @@ def container():
     c.exec_run("pip install pipx pre-commit cookiecutter gitpython")
     yield c
 
-    c.restart()
+    c.stop()
 
 
 @pytest.fixture(scope="session")
@@ -75,8 +75,9 @@ def test_role_installation(
     """Is role installed?"""
 
     print(installation_dir)
+    print(installation_dir.exists())
     res: docker.ExecResult = container.exec_run(
-        "cookiecutter --no-input gh:fesaille/cookiecutter-ansible-role -o /tmp/cookiecutter-role-ansible"
+        f"cookiecutter --no-input gh:fesaille/cookiecutter-ansible-role -o {installation_dir}"
     )
     assert res.exit_code == 0, f"Role not correctly or not installed in container"
 
