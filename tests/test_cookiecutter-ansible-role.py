@@ -31,17 +31,19 @@ def container():
     EOF"""
     )
     c.exec_run("pip install pipx pre-commit cookiecutter gitpython")
-    # c.exec_run("pipx ensurepath")
-    # c.restart()
-    # c.exec_run("pipx install pre-commit")
-    # c.exec_run("pipx install cookiecutter --pip-args gitpython")
     yield c
 
-    c.stop()
+    c.restart()
+
+
+@pytest.fixture(scope="session")
+def installation_dir(tmpdir_factory):
+    tmp = tmpdir_factory.mktemp("cookie")
+    return tmp
 
 
 def test_python_installation(container: docker.models.containers.Container) -> None:
-    """Test that python is available in the container."""
+    """Is python available in the container?"""
 
     python_version_tupled = tuple(int(p) for p in str(PYTHON_VERSION).split("."))
     res: docker.ExecResult = container.exec_run(
@@ -52,16 +54,14 @@ def test_python_installation(container: docker.models.containers.Container) -> N
 
 
 def test_pre_commit_presence(container: docker.models.containers.Container) -> None:
-    """Test if pre-commit is installed."""
+    """Is pre-commit installed?"""
 
     res: docker.ExecResult = container.exec_run("pre-commit --version")
     assert res.exit_code == 0, f"pre-commit not correctly or not installed in container"
 
 
-def test_cookiecutter_presence(
-    container: docker.models.containers.Container,
-) -> None:
-    """Test if cookiecutter is installed."""
+def test_cookiecutter_presence(container: docker.models.containers.Container) -> None:
+    """Is cookiecutter installed?"""
 
     res: docker.ExecResult = container.exec_run("cookiecutter --version")
     assert (
@@ -69,12 +69,23 @@ def test_cookiecutter_presence(
     ), f"cookiecutter not correctly or not installed in container"
 
 
-def test_cookiecutter_installation(
-    container: docker.models.containers.Container,
+def test_role_installation(
+    container: docker.models.containers.Container, installation_dir
 ) -> None:
-    """Test if role installation"""
+    """Is role installed?"""
 
+    print(installation_dir)
     res: docker.ExecResult = container.exec_run(
         "cookiecutter --no-input gh:fesaille/cookiecutter-ansible-role -o /tmp/cookiecutter-role-ansible"
     )
     assert res.exit_code == 0, f"Role not correctly or not installed in container"
+
+
+def test_is_git_dir(
+    container: docker.models.containers.Container, installation_dir
+) -> None:
+    """Is role inits a git dir?"""
+
+    print(installation_dir)
+    res: docker.ExecResult = container.exec_run(f"git -C {installation_dir} rev-parse")
+    assert res.exit_code == 0, f"Role did not create a git dir"
