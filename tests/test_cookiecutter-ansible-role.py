@@ -69,7 +69,7 @@ def test_cookiecutter_presence(container: docker.models.containers.Container) ->
     ), f"cookiecutter not correctly or not installed in container"
 
 
-def test_role_installation(
+def test_is_role_installed(
     container: docker.models.containers.Container, installation_dir
 ) -> None:
     """Is role installed?"""
@@ -87,6 +87,5 @@ def test_is_git_dir(
 ) -> None:
     """Is role inits a git dir?"""
 
-    print(installation_dir)
     res: docker.ExecResult = container.exec_run(f"git -C {installation_dir} rev-parse")
     assert res.exit_code == 0, f"Role did not create a git dir"
