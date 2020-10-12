@@ -13,7 +13,6 @@ if "{{ cookiecutter.add_travis_config }}" == "n":
 if "{{ cookiecutter.add_gitlab_ci_config }}" == "n":
     Path(".gitlab-ci.yml").unlink()
 
-if "{{ cookiecutter.add_gitlab_ci_config }}" == "n":
-    Path(".gitlab-ci.yml").unlink()
-
+if "{{ cookiecutter.add_github_action_config }}" == "n":
+	...
 
