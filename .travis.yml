@@ -3,8 +3,7 @@ language: python
 before_install:
   - sudo apt-get -qq update
 install:
-  - pip install pre-commit pytest
+  - pip install docker pre-commit pytest
 script:
   - pre-commit run -a
   - pytest
-
